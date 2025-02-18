@@ -5,3 +5,5 @@ dependencies:
     github: crystal-lang/crystal-sqlite3
   myhtml:
     github: kostya/myhtml
+  crinja:
+    github: straight-shoota/crinja

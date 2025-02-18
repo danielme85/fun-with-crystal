@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bikes</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <div>
+        <p>
+            <a href="#" onclick="location.reload()">Reload Graph</button>
+        </p>
+        <p>
+            <a href="/scrape" target="_blank">Manually trigger scrape</a>
+        </p>
+    </div>
+</body>
+
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+
+<script>
+    let dataString = '{{ results }}'
+    let dataJson = JSON.parse(dataString.replace(/&quot;/g, '"'));
+
+    let labels = [];
+    let data = [];
+
+    if (dataJson && dataJson.length > 0) {
+        dataJson.forEach(element => {
+            let priceInt = element.price.replace(/\D/g, "") / 10;
+            data.push(priceInt);
+            labels.push(element.time);
+        });
+    }
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                borderColor: "#084de0",
+                label: 'AW SuperFast Roadster',
+                data: data,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 10000,
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, ticks) {
+                            return new Intl.NumberFormat("en-US", {style: "currency", currency: "USD"}).format(value);
+                        }
+                    }
+                },
+                x: {
+                    type: 'time',
+                }
+            }
+        }
+    });
+</script>
+
+
+</html>
